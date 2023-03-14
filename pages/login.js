@@ -25,10 +25,7 @@ export default function Login(){
         onSubmit
     })
 
-    /**
-     * haleykennedy@gmail.com
-     * admin123
-     */
+   
 
     async function onSubmit(values){
         const status = await signIn('credentials', {
@@ -40,16 +37,6 @@ export default function Login(){
 
         if(status.ok) router.push(status.url)
         
-    }
-
-    // Google Handler function
-    async function handleGoogleSignin(){
-        signIn('google', { callbackUrl : "http://localhost:3000"})
-    }
-
-    // Github Login 
-    async function handleGithubSignin(){
-        signIn('github', { callbackUrl : "http://localhost:3000"})
     }
 
     return (
@@ -101,16 +88,6 @@ export default function Login(){
                 <div className="input-button">
                     <button type='submit' className={styles.button}>
                         Login
-                    </button>
-                </div>
-                <div className="input-button">
-                    <button type='button' onClick={handleGoogleSignin} className={styles.button_custom}>
-                        Sign In with Google <Image src={'/assets/google.svg'} width="20" height={20} ></Image>
-                    </button>
-                </div>
-                <div className="input-button">
-                    <button type='button' onClick={handleGithubSignin} className={styles.button_custom}>
-                        Sign In with Github <Image src={'/assets/github.svg'} width={25} height={25}></Image>
                     </button>
                 </div>
             </form>
