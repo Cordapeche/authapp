@@ -1,19 +1,19 @@
-import Head from 'next/head'
-import Layout from '../layout/layout'
-import Link from 'next/link'
+import Head from 'next/head';
+import Layout from '../layout/layout';
+import Link from 'next/link';
 import styles from '../styles/Form.module.css';
-import Image from 'next/image'
 import { HiAtSymbol, HiFingerPrint } from "react-icons/hi";
 import { useState } from 'react';
-import { signIn, singOut } from "next-auth/react"
-import { useFormik} from "formik"
+import { signIn, singOut } from "next-auth/react";
+import { useFormik} from "formik";
 import login_validate from '../lib/validate';
+import { useRouter } from 'next/router';
  
-export default function Login(){
+export default function Login(){   
 
-    
-
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false);
+    const [error, setError] = useState();
+    const router = useRouter();
     // Formik hook
     const formik = useFormik({
         initialValues:{
@@ -25,13 +25,22 @@ export default function Login(){
     })
 
     async function onSubmit(values){
-        console.log(values);
-    }
+        const status = await signIn('credentials', {
+            redirect: false,
+            email: values.email,
+            password: values.password,
+            callbackUrl: "/"
+        });
 
-    //Google Handler fucntion
+        console.log(status);
 
-    async function handleGoogleSignIn() {
-        signIn('google', {CallbackUrl : "http://localhost:3000"})
+        if(status.ok){
+            router.push(status.url)
+        } 
+        else (
+            setError(status.error)
+        )
+        
     }
 
     return (
@@ -45,6 +54,7 @@ export default function Login(){
             <div className="title">
                 <h1 className='text-gray-800 text-4xl font-bold py-4'>Explore</h1>
                 <p className='w-3/4 mx-auto text-gray-400'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, officia?</p>
+                <p className='text-red-500'>{error}</p>
             </div>
 
             {/* form */}
@@ -83,17 +93,7 @@ export default function Login(){
                     <button type='submit' className={styles.button}>
                         Login
                     </button>
-                </div>
-                <div className="input-button">
-                    <button type='button' onClick={handleGoogleSignIn} className={styles.button_custom}>
-                        Sign In with Google <Image src={'/assets/google.svg'} width="20" height={20} ></Image>
-                    </button>
-                </div>
-                <div className="input-button">
-                    <button type='button' className={styles.button_custom}>
-                        Sign In with Github <Image src={'/assets/github.svg'} width={25} height={25}></Image>
-                    </button>
-                </div>
+                </div>                
             </form>
 
             {/* bottom */}
